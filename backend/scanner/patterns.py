@@ -19,4 +19,4 @@ SECRET_PATTERNS = {
         "description": "Possible hardcoded password",
         "severity": "high",
     },
-}
+} 
