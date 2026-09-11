@@ -50,3 +50,25 @@ def test_clean_content_has_no_findings():
     findings = detect_secrets(content)
 
     assert findings == []
+def test_google_api_key_detection():
+    content = 'google_api_key = "AIzaSyA12345678901234567890123456789012"'
+
+    findings = detect_secrets(content)
+
+    assert len(findings) >= 1
+    assert findings[0]["type"] == "google_api_key"
+    assert findings[0]["severity"] == "high"
+
+
+def test_discord_token_detection():
+    content = (
+        'discord_token = '
+        '"MTIzNDU2Nzg5MDEyMzQ1Njc4.ABCDEF.'
+        'abcdefghijklmnopqrstuvwxyz1"'
+    )
+
+    findings = detect_secrets(content)
+
+    assert len(findings) >= 1
+    assert findings[0]["type"] == "discord_token"
+    assert findings[0]["severity"] == "critical"
