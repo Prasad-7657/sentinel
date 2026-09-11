@@ -1,0 +1,2 @@
+-Project tital - Sentinel 
+-discreption - A cybersecurity platform for detecting, classifying, and remediating exposed secrets and credentials.
