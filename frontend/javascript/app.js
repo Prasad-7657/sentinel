@@ -263,3 +263,13 @@ function escapeHtml(value) {
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
 }
+const clearButton = document.getElementById("clear-button");
+
+if (clearButton) {
+    clearButton.addEventListener("click", () => {
+        sourceCodeInput.value = "";
+        resultsContainer.innerHTML = "";
+        statusContainer.textContent = "Ready to scan your source code.";
+        updateSummary([]);
+    });
+}
