@@ -1480,3 +1480,10 @@ body::before {
         padding: 25px;
     }
 }
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+}

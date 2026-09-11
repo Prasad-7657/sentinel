@@ -1,32 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="../css/Mainpage.css">
-    <script src="../javascript/app.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../css/Mainpage.css">
+
     <title>Sentinel | Secrets & Credential Exposure Detection</title>
 </head>
+
 <body>
-    <header class="navbar"> 
+    <header class="navbar">
         <div class="brand">
-             <div class="brand-icon">◈</div> 
-        <span>SENTINEL</span> 
-    </div> 
-    <nav class="nav-links"> 
-        <a href="dashboard.html">Dashboard</a>
-         <a href="capabilities.html">Capabilities</a> 
-         <a href="documentation.html">Documentation</a> 
+            <div class="brand-icon">◈</div>
+            <span>SENTINEL</span>
+        </div>
+
+        <nav class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="capabilities.html">Capabilities</a>
+            <a href="documentation.html">Documentation</a>
         </nav>
-          <div class="system-status"> 
+
+        <div class="system-status">
             <span class="status-dot"></span>
-             System Operational 
+            System Operational
         </div>
     </header>
 
-     <main>
-
+    <main>
         <!-- Hero Section -->
         <section class="hero" id="dashboard">
-
             <div class="hero-content">
                 <div class="eyebrow">
                     <span class="eyebrow-line"></span>
@@ -45,14 +49,16 @@
                 </p>
 
                 <div class="hero-buttons">
-                    <button class="btn btn-primary" id="startScanBtn">
+                    <!-- Connected to dashboard -->
+                    <a href="dashboard.html" class="btn btn-primary">
                         Start a Scan
                         <span>→</span>
-                    </button>
+                    </a>
 
-                    <button class="btn btn-secondary" id="docsBtn">
+                    <!-- Connected to documentation -->
+                    <a href="documentation.html" class="btn btn-secondary">
                         View Documentation
-                    </button>
+                    </a>
                 </div>
 
                 <div class="hero-note">
@@ -61,14 +67,12 @@
                 </div>
             </div>
 
-
-            <!-- Hero Visual / Status Card -->
+            <!-- Hero Visual -->
             <div class="hero-visual">
                 <div class="glow glow-one"></div>
                 <div class="glow glow-two"></div>
 
                 <div class="security-card">
-
                     <div class="card-top">
                         <div>
                             <p class="card-label">SENTINEL ENGINE</p>
@@ -104,7 +108,7 @@
                             <strong>Ready</strong>
                         </div>
 
-                           <div class="engine-item">
+                        <div class="engine-item">
                             <span class="item-icon">✓</span>
                             <span>Entropy Analysis</span>
                             <strong>Ready</strong>
@@ -116,13 +120,12 @@
                             <strong>Ready</strong>
                         </div>
                     </div>
-
                 </div>
             </div>
-
         </section>
-        <section class="stats-section">
 
+        <!-- Statistics -->
+        <section class="stats-section">
             <div class="stat-card">
                 <span class="stat-number">0</span>
                 <span class="stat-label">Scans Completed</span>
@@ -139,20 +142,22 @@
             </div>
 
             <div class="stat-card">
-                <span class="stat-number">0</span>
+                <span class="stat-number">100%</span>
                 <span class="stat-label">Detection Health</span>
             </div>
-
         </section>
-
 
         <!-- Capabilities -->
         <section class="capabilities-section" id="capabilities">
-
             <div class="section-heading">
                 <div>
                     <p class="section-eyebrow">DETECTION CAPABILITIES</p>
-                    <h2>Find what should<br><span>never be exposed.</span></h2>
+
+                    <h2>
+                        Find what should
+                        <br>
+                        <span>never be exposed.</span>
+                    </h2>
                 </div>
 
                 <p class="section-description">
@@ -162,36 +167,47 @@
                 </p>
             </div>
 
-
             <div class="capability-grid">
-
                 <div class="capability-card">
                     <div class="capability-icon">⌘</div>
+
                     <h3>API Keys & Tokens</h3>
+
                     <p>
                         Identify exposed API keys, access tokens,
                         and authentication credentials.
                     </p>
-                    <span class="card-arrow">↗️</span>
+
+                    <span class="card-arrow">↗</span>
                 </div>
 
                 <div class="capability-card">
                     <div class="capability-icon">♢</div>
+
                     <h3>Private Keys</h3>
+
                     <p>
                         Detect private-key material and other
                         high-risk cryptographic credentials.
                     </p>
-                    <span class="card-arrow">↗️</span>
+
+                    <span class="card-arrow">↗</span>
                 </div>
 
                 <div class="capability-card">
                     <div class="capability-icon">⌁</div>
+
                     <h3>Passwords & Secrets</h3>
+
                     <p>
                         Discover hardcoded passwords, secrets,
                         and sensitive configuration values.
                     </p>
 
-        </body>
+                    <span class="card-arrow">↗</span>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
 </html>
