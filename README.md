@@ -1,104 +1,105 @@
 # Sentinel
-
 Sentinel is a secrets and credential exposure detection platform that scans source code and uploaded files for accidentally exposed secrets.
 
-## Features
 
-- Detects AWS access keys
-- Detects GitHub tokens
-- Detects private keys
-- Detects hardcoded passwords
-- Calculates secret entropy
-- Assigns severity levels
-- Provides remediation guidance
-- Scans pasted source code
-- Scans uploaded files
-- Simple web dashboard
+## Features
+- Scan source code directly from the dashboard
+- Upload and scan supported text files
+- Detect AWS access keys
+- Detect GitHub tokens
+- Detect Google API keys
+- Detect Discord bot tokens
+- Detect private keys
+- Detect hardcoded passwords
+- Assign severity levels
+- Provide remediation guidance
+- Display scan history
+- REST API built with Flask
+- Automated backend tests using pytest
+
+## Technology Stack
+### Frontend
+
+- HTML
+- CSS
+- JavaScript
+
+### Backend
+
+- Python
+- Flask
+- Flask-CORS
+- Regular expressions
+- Pytest
 
 ## Project Structure
-.
-├── backend
-│   ├── app.py
-│   ├── __pycache__
-│   │   └── app.cpython-312.pyc
-│   ├── requirements.txt
-│   ├── scanner
-│   │   ├── context.py
-│   │   ├── detector.py
-│   │   ├── entropy.py
-│   │   ├── __init__.py
-│   │   ├── patterns.py
-│   │   ├── __pycache__
-│   │   │   ├── detector.cpython-312.pyc
-│   │   │   ├── entropy.cpython-312.pyc
-│   │   │   ├── __init__.cpython-312.pyc
-│   │   │   ├── patterns.cpython-312.pyc
-│   │   │   ├── remediation.cpython-312.pyc
-│   │   │   └── severity.cpython-312.pyc
-│   │   ├── remediation.py
-│   │   ├── severity.py
-│   │   └── validator.py
-│   ├── tests
-│   └── uploads
-├── docs
-│   ├── architecture.md
-│   └── threat-model.md
-├── frontend
-│   ├── css
-│   │   ├── dashboard.css
-│   │   └── Mainpage.css
-│   ├── Html
-│   │   ├── capabilities.html
-│   │   ├── dashboard.html
-│   │   ├── documentation.html
-│   │   └── Mainpage.html
-│   └── javascript
-│       └── app.js
-├── README.md
 
-# Requirements
+sentinel/
+├── backend/
+│   ├── app.py
+│   ├── requirements.txt
+│   └── scanner/
+│       ├── context.py
+│       ├── detector.py
+│       ├── entropy.py
+│       ├── patterns.py
+│       ├── remediation.py
+│       ├── severity.py
+│       └── validator.py
+├── frontend/
+│   ├── css/
+│   ├── Html/
+│   └── javascript/
+├── tests/
+│   ├── test_api.py
+│   └── test_detector.py
+└── README.md
+ 
 
-Python 3
-
-Flask
-
-Flask-CORS
-
-
-# Backend Setup
-
+#Installation
+git clone https://github.com/Prasad-7657/sentinel.git
 cd sentinel
+
+
+#Create and activate the virtual environment:
 python3 -m venv backend/.venv
 source backend/.venv/bin/activate
+
+
+#Install dependencies:
 pip install -r backend/requirements.txt
+pip install pytest
+
+
+#Running Sentinel
+Start the backend:
 python3 backend/app.py
 
-#The backend runs at:
-http://127.0.0.1:5000
-
-
-#Frontend Setup
-cd sentinel/frontend
+In another terminal, start the frontend:
+cd frontend
 python3 -m http.server 8000
 
 
-#Open:
-http://127.0.0.1:8000/Html/dashboard.html
+#open mainpage
+http://127.0.0.1:8000/Html/Mainpage.html
 
 
+#Running Tests
+From the project root:
+pytest -v
 
-# Future Improvements
 
-SQLite scan history
+#Security Note
+Only use fake sample credentials while testing Sentinel.
+If a real secret is detected:
+Revoke or rotate it immediately.
+Remove it from the source code.
+Check repository history.
+Move secrets into environment variables or a secure secrets manager.
+Review logs for possible unauthorized use.
 
-User authentication
 
-PostgreSQL support
-
-More secret detection patterns
-
-Git repository scanning
-
-Exportable scan reports
-
-Deployment with Docker
+#Project Status
+Sentinel is a functional hackathon MVP with a Flask scanning API,
+ browser dashboard, multiple secret-detection patterns, remediation guidance,
+ and automated tests.
