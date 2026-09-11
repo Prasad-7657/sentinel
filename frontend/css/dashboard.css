@@ -1,0 +1,158 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #0b1020;
+    color: #f5f7ff;
+    font-family: Arial, sans-serif;
+}
+
+.dashboard {
+    width: min(100% - 32px, 1000px);
+    margin: 0 auto;
+    padding: 48px 0;
+}
+
+.dashboard-header {
+    margin-bottom: 32px;
+}
+
+.eyebrow {
+    color: #7c9cff;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+h1 {
+    margin: 8px 0;
+    font-size: clamp(32px, 5vw, 52px);
+}
+
+h2 {
+    margin-top: 0;
+}
+
+.dashboard-header p {
+    color: #aab3cc;
+}
+
+.scanner-panel,
+.results-panel {
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 1px solid #29334f;
+    border-radius: 16px;
+    background: #121a2d;
+}
+
+label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: bold;
+}
+
+textarea {
+    width: 100%;
+    resize: vertical;
+    padding: 16px;
+    border: 1px solid #394765;
+    border-radius: 10px;
+    background: #080d19;
+    color: #f5f7ff;
+    font: 14px monospace;
+}
+
+button {
+    margin-top: 16px;
+    padding: 12px 20px;
+    border: 0;
+    border-radius: 8px;
+    background: #5b7cfa;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+#scan-status {
+    color: #aab3cc;
+}
+
+.finding-card {
+    margin-top: 16px;
+    padding: 18px;
+    border-left: 5px solid #f59e0b;
+    border-radius: 10px;
+    background: #1a2238;
+}
+
+.finding-card.critical {
+    border-left-color: #ef4444;
+}
+
+.finding-card.high {
+    border-left-color: #f59e0b;
+}
+
+.finding-card.medium {
+    border-left-color: #eab308;
+}
+
+.finding-card.low {
+    border-left-color: #22c55e;
+}
+
+.finding-card.safe {
+    border-left-color: #22c55e;
+}
+
+.finding-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.finding-header h3 {
+    margin: 0;
+}
+
+.severity-badge {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.severity-badge.critical {
+    background: #7f1d1d;
+    color: #fecaca;
+}
+
+.severity-badge.high {
+    background: #78350f;
+    color: #fed7aa;
+}
+
+.severity-badge.medium {
+    background: #713f12;
+    color: #fef08a;
+}
+
+.severity-badge.low {
+    background: #14532d;
+    color: #bbf7d0;
+}
+
+code {
+    overflow-wrap: anywhere;
+    color: #a5b4fc;
+}

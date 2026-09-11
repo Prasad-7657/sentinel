@@ -4,27 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sentinel Dashboard</title>
-    <link rel="stylesheet" href="../css/Mainpage.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
-    <main>
-        <h1>Sentinel Dashboard</h1>
-        <p>Scan source code for exposed secrets and credentials.</p>
+    <main class="dashboard">
+        <header class="dashboard-header">
+            <p class="eyebrow">SENTINEL SECURITY PLATFORM</p>
+            <h1>Secret Exposure Scanner</h1>
+            <p>
+                Detect exposed credentials, API keys, passwords, and private keys.
+            </p>
+        </header>
 
-        <label for="source-code">Source code to scan</label>
-        <textarea
-            id="source-code"
-            rows="12"
-            placeholder="Paste code here..."
-        ></textarea>
+        <section class="scanner-panel">
+            <label for="source-code">Source code to scan</label>
 
-        <button id="scan-button">Scan</button>
+            <textarea
+                id="source-code"
+                placeholder="Paste source code or configuration here..."
+                rows="12"
+            ></textarea>
 
-        <p id="scan-status"></p>
+            <button id="scan-button">Scan for secrets</button>
 
-        <section>
+            <p id="scan-status" aria-live="polite"></p>
+        </section>
+
+        <section class="results-panel">
             <h2>Scan Results</h2>
-            <pre id="results">No scan performed yet.</pre>
+            <div id="results">
+                <p>No scan performed yet.</p>
+            </div>
         </section>
     </main>
 
