@@ -1777,3 +1777,239 @@ body::before {
         flex-wrap: wrap;
     }
 }
+
+/* =========================================================
+   SENTINEL NAVBAR AND CENTERED PAGE HERO FIX
+   ========================================================= */
+
+.navbar {
+    width: 100%;
+    background: #070b11;
+    border-bottom: 1px solid #1b2934;
+}
+
+.nav-container {
+    max-width: 1180px;
+    min-height: 82px;
+    margin: 0 auto;
+    padding: 0 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 35px;
+}
+
+/* Logo */
+
+.brand-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+
+    color: #f5f7fa;
+    text-decoration: none;
+    font-family: inherit;
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.brand-logo:hover {
+    color: #00e5c3;
+}
+
+.brand-mark {
+    width: 38px;
+    height: 38px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 2px solid #00e5c3;
+    border-radius: 11px;
+
+    background: #0d2928;
+    color: #00e5c3;
+
+    font-size: 1.35rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.brand-name {
+    color: #f5f7fa;
+}
+
+/* Navigation */
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 38px;
+}
+
+.nav-links a {
+    position: relative;
+
+    padding: 30px 0;
+
+    color: #b4bec8;
+    text-decoration: none;
+
+    font-size: 0.9rem;
+    font-weight: 700;
+
+    transition: color 0.2s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: #00e5c3;
+}
+
+.nav-links a.active::after {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 18px;
+
+    height: 2px;
+    border-radius: 20px;
+
+    background: #00e5c3;
+}
+
+/* =========================================================
+   CENTER CONTENT ON HOME, CAPABILITIES AND DOCUMENTATION
+   ========================================================= */
+
+/* Home page hero */
+
+.hero,
+.home-hero,
+.main-hero {
+    text-align: center;
+}
+
+.hero-content,
+.home-hero-content,
+.main-hero-content {
+    max-width: 850px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Capabilities page */
+
+.capabilities-hero,
+.capabilities-header,
+.page-hero {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 100px 24px 65px;
+
+    text-align: center;
+}
+
+.capabilities-hero h1,
+.capabilities-header h1,
+.page-hero h1 {
+    max-width: 850px;
+    margin: 15px auto 25px;
+}
+
+.capabilities-hero p,
+.capabilities-header p,
+.page-hero p {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* Documentation page */
+
+.documentation-hero,
+.documentation-header {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 100px 24px 65px;
+
+    text-align: center;
+}
+
+.documentation-hero h1,
+.documentation-header h1 {
+    max-width: 850px;
+    margin: 15px auto 25px;
+}
+
+.documentation-hero p,
+.documentation-header p {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* Center documentation and capability cards */
+
+.capabilities-grid,
+.documentation-grid,
+.docs-grid {
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+.capability-card,
+.documentation-card,
+.docs-card {
+    text-align: center;
+}
+
+/* Responsive navbar */
+
+@media (max-width: 800px) {
+    .nav-container {
+        min-height: auto;
+        padding: 20px 24px;
+
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .nav-links {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 22px;
+    }
+
+    .nav-links a {
+        padding: 8px 0;
+    }
+
+    .nav-links a.active::after {
+        bottom: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .brand-logo {
+        font-size: 1.1rem;
+    }
+
+    .brand-mark {
+        width: 34px;
+        height: 34px;
+        font-size: 1.2rem;
+    }
+
+    .nav-links {
+        gap: 15px;
+    }
+
+    .nav-links a {
+        font-size: 0.78rem;
+    }
+}

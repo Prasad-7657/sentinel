@@ -4,245 +4,249 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Sentinel Dashboard</title>
+
     <link rel="stylesheet" href="../css/Mainpage.css">
     <link rel="stylesheet" href="../css/dashboard.css">
-
-    <title>Sentinel | Security Dashboard</title>
 </head>
 
 <body>
-    <header class="navbar">
-        <div class="brand">
-            <div class="brand-icon">◈</div>
-            <span>SENTINEL</span>
-        </div>
 
-        <nav class="nav-links">
-            <a href="Mainpage.html">Home</a>
-            <a href="dashboard.html" class="active">Dashboard</a>
-            <a href="capabilities.html">Capabilities</a>
-            <a href="documentation.html">Documentation</a>
-        </nav>
+<header class="navbar">
+    <div class="nav-container">
 
-        <div class="system-status">
-            <span class="status-dot"></span>
-            System Operational
+        <a href="Mainpage.html" class="brand-logo">
+            <span class="brand-mark">S</span>
+            <span class="brand-name">Sentinel</span>
+        </a>
+            <nav class="nav-links">
+                <a href="Mainpage.html">Home</a>
+                <a href="capabilities.html">Capabilities</a>
+                <a href="documentation.html">Documentation</a>
+            </nav>
+
         </div>
     </header>
 
-    <main class="dashboard-page">
+    <main>
+
         <section class="dashboard-hero">
-            <div>
-                <p class="section-eyebrow">SECURITY INTELLIGENCE PLATFORM</p>
+            <div class="dashboard-hero-content">
+                <p class="section-eyebrow">SECURITY OPERATIONS</p>
 
                 <h1>
-                    Security
-                    <span>Dashboard.</span>
+                    Detect exposed secrets
+                    <span>before attackers do.</span>
                 </h1>
 
                 <p>
-                    Scan source code, detect exposed credentials,
-                    and review actionable security findings.
+                    Scan source code and files for exposed credentials,
+                    private keys, passwords, and sensitive tokens.
                 </p>
             </div>
 
-            <div class="dashboard-engine-status">
+            <div class="dashboard-status-card">
                 <span class="status-dot"></span>
-                Scanner Ready
+                <div>
+                    <strong>Scanner online</strong>
+                    <p>Ready to inspect your code</p>
+                </div>
             </div>
         </section>
 
         <section class="summary-grid">
+
             <div class="summary-card">
                 <div class="summary-card-top">
-                    <span class="summary-label">TOTAL FINDINGS</span>
-                    <span class="summary-icon">⌁</span>
+                    <span>Total findings</span>
+                    <span class="summary-icon">!</span>
                 </div>
-
                 <strong id="total-count">0</strong>
-                <p>Detected security issues</p>
+                <p>Detected secrets</p>
             </div>
 
             <div class="summary-card critical-card">
                 <div class="summary-card-top">
-                    <span class="summary-label">CRITICAL</span>
+                    <span>Critical</span>
                     <span class="summary-icon">!</span>
                 </div>
-
                 <strong id="critical-count">0</strong>
-                <p>Immediate attention required</p>
+                <p>Immediate attention</p>
             </div>
 
             <div class="summary-card high-card">
                 <div class="summary-card-top">
-                    <span class="summary-label">HIGH RISK</span>
-                    <span class="summary-icon">▲</span>
+                    <span>High</span>
+                    <span class="summary-icon">!</span>
                 </div>
-
                 <strong id="high-count">0</strong>
-                <p>Potentially dangerous secrets</p>
+                <p>High-risk findings</p>
             </div>
 
-            <div class="summary-card">
+            <div class="summary-card medium-card">
                 <div class="summary-card-top">
-                    <span class="summary-label">SCAN STATUS</span>
-                    <span class="summary-icon">✓</span>
+                    <span>Medium</span>
+                    <span class="summary-icon">!</span>
                 </div>
-
-                <strong id="scanStatusValue">READY</strong>
-                <p id="scanStatusDescription">Waiting for scan</p>
+                <strong id="medium-count">0</strong>
+                <p>Review recommended</p>
             </div>
+
+            <div class="summary-card low-card">
+                <div class="summary-card-top">
+                    <span>Low</span>
+                    <span class="summary-icon">!</span>
+                </div>
+                <strong id="low-count">0</strong>
+                <p>Low-risk findings</p>
+            </div>
+
         </section>
 
-        <!-- Required by app.js -->
-        <span id="medium-count" hidden>0</span>
-        <span id="low-count" hidden>0</span>
+        <section class="scanner-grid">
 
-        <section class="scanner-layout">
             <div class="scanner-panel">
+
                 <div class="panel-heading">
                     <div>
-                        <p class="panel-eyebrow">SOURCE ANALYSIS</p>
+                        <p class="section-eyebrow">SOURCE SCANNER</p>
                         <h2>Scan source code</h2>
                     </div>
 
-                    <span class="panel-badge">LIVE ENGINE</span>
+                    <span class="panel-badge">Text</span>
                 </div>
 
                 <p class="panel-description">
-                    Paste code below to identify exposed keys, tokens,
-                    passwords, and private keys.
+                    Paste your source code below to identify exposed
+                    credentials and sensitive information.
                 </p>
 
-                <label for="source-code" class="input-label">
-                    Source code
-                </label>
+                <label for="source-code">Source code</label>
 
                 <textarea
                     id="source-code"
                     class="code-input"
-                    placeholder="Paste source code here...
-
-Example:
-aws_key = AKIAIOSFODNN7EXAMPLE
-password = &quot;demo-password&quot;"
+                    placeholder="Paste your source code here..."
+                    spellcheck="false"
                 ></textarea>
 
-                <div class="scanner-actions">
-                    <button
-                        id="scan-button"
-                        class="btn btn-primary"
-                        type="button"
-                    >
-                        Scan Code →
+                <div class="panel-actions">
+                    <button id="scan-button" class="btn btn-primary" type="button">
+                        Scan source code
                     </button>
 
-                    <button
-                        id="clear-button"
-                        class="btn btn-secondary"
-                        type="button"
-                    >
+                    <button id="clear-button" class="btn btn-secondary" type="button">
                         Clear
                     </button>
                 </div>
+
             </div>
 
-            <div class="scanner-panel upload-panel">
+            <div class="scanner-panel">
+
                 <div class="panel-heading">
                     <div>
-                        <p class="panel-eyebrow">FILE ANALYSIS</p>
+                        <p class="section-eyebrow">FILE SCANNER</p>
                         <h2>Upload a file</h2>
                     </div>
 
-                    <span class="panel-badge">MULTIPART</span>
+                    <span class="panel-badge">File</span>
                 </div>
 
                 <p class="panel-description">
-                    Upload a supported source-code or text file
-                    for secret detection.
+                    Upload a supported text or source-code file for
+                    secret detection.
                 </p>
 
-                <label
-                    for="file-input"
-                    class="file-drop-zone"
-                >
-                    <span class="upload-icon">⇧</span>
-                    <strong>Select a file</strong>
-                    <span>
-                        Python, JavaScript, JSON, YAML, TXT and more
-                    </span>
+                <label for="file-input" class="upload-box">
+                    <span class="upload-icon">↑</span>
+                    <strong>Choose a file</strong>
+                    <span>Python, JavaScript, JSON, TXT and more</span>
+                    <span id="selected-file">No file selected</span>
                 </label>
 
                 <input
-                    type="file"
                     id="file-input"
-                    class="hidden-file-input"
+                    type="file"
+                    hidden
                 >
 
-                <p
-                    id="selectedFileName"
-                    class="selected-file"
-                >
-                    No file selected
-                </p>
+                <div class="panel-actions">
+                    <button
+                        id="file-scan-button"
+                        class="btn btn-primary"
+                        type="button"
+                    >
+                        Scan uploaded file
+                    </button>
+                </div>
 
-                <button
-                    id="file-scan-button"
-                    class="btn btn-primary file-scan-button"
-                    type="button"
-                >
-                    Scan File →
-                </button>
             </div>
-        </section>
 
-        <section class="scan-status-panel">
-            <div class="status-message">
-                <span class="status-dot"></span>
-
-                <span id="scan-status">
-                    Ready to scan your source code.
-                </span>
-            </div>
         </section>
 
         <section class="results-section">
+
             <div class="results-heading">
                 <div>
-                    <p class="section-eyebrow">SECURITY RESULTS</p>
+                    <p class="section-eyebrow">SCAN RESULTS</p>
                     <h2>Detected findings</h2>
                 </div>
 
-                <span
-                    id="resultsCount"
-                    class="results-count"
-                >
+                <span id="results-count" class="results-count">
                     0 findings
                 </span>
             </div>
 
-            <div
-                id="results"
-                class="results-container"
-            >
+            <div id="results" class="results-container">
                 <div class="empty-results">
-                    <div class="empty-results-icon">✓</div>
-
-                    <h3>No findings yet</h3>
-
+                    <span class="empty-results-icon">✓</span>
+                    <h3>No scan results yet</h3>
                     <p>
-                        Run a scan to see detected secrets and
+                        Start a scan to see exposed secrets and
                         remediation guidance here.
                     </p>
                 </div>
             </div>
+
         </section>
+
+        <section class="history-section">
+
+            <div class="results-heading">
+                <div>
+                    <p class="section-eyebrow">SCAN ACTIVITY</p>
+                    <h2>Scan history</h2>
+                </div>
+
+                <button
+                    id="clear-history-button"
+                    class="btn btn-secondary"
+                    type="button"
+                >
+                    Clear history
+                </button>
+            </div>
+
+            <div id="scan-history" class="history-container">
+                <div class="empty-results">
+                    <span class="empty-results-icon">↺</span>
+                    <h3>No scan history</h3>
+                    <p>
+                        Your completed scans will appear here.
+                    </p>
+                </div>
+            </div>
+
+        </section>
+
     </main>
 
-    <footer class="site-footer">
-        <p>© 2026 Sentinel. Built for safer code.</p>
+    <footer class="footer">
+        <p>© 2026 Sentinel. Secrets and Credential Exposure Detection Platform.</p>
     </footer>
 
     <script src="../javascript/app.js"></script>
+
 </body>
 </html>

@@ -1,13 +1,14 @@
 const API_BASE_URL = "http://127.0.0.1:5000";
 
 const scanButton = document.getElementById("scan-button");
-const clearButton = document.getElementById("clear-button");
 const fileInput = document.getElementById("file-input");
 const fileScanButton = document.getElementById("file-scan-button");
+const clearButton = document.getElementById("clear-button");
 
 const sourceCode = document.getElementById("source-code");
 const resultsContainer = document.getElementById("results");
 const scanStatus = document.getElementById("scan-status");
+const selectedFile = document.getElementById("selected-file");
 
 const totalCount = document.getElementById("total-count");
 const criticalCount = document.getElementById("critical-count");
@@ -15,27 +16,40 @@ const highCount = document.getElementById("high-count");
 const mediumCount = document.getElementById("medium-count");
 const lowCount = document.getElementById("low-count");
 
-const scanStatusValue = document.getElementById("scanStatusValue");
-const scanStatusDescription = document.getElementById(
-    "scanStatusDescription"
-);
+const resultsCount = document.getElementById("results-count");
 
-const selectedFileName = document.getElementById("selectedFileName");
-const resultsCount = document.getElementById("resultsCount");
+const historyContainer = document.getElementById("scan-history");
+const clearHistoryButton = document.getElementById("clear-history-button");
 
-function setScanStatus(status, description, message) {
-    if (scanStatusValue) {
-        scanStatusValue.textContent = status;
+const HISTORY_KEY = "sentinel_scan_history";
+const MAX_HISTORY_ITEMS = 10;
+
+
+/*
+|--------------------------------------------------------------------------
+| Status handling
+|--------------------------------------------------------------------------
+*/
+
+function setScanStatus(status, description) {
+    if (!scanStatus) {
+        return;
     }
 
-    if (scanStatusDescription) {
-        scanStatusDescription.textContent = description;
-    }
-
-    if (scanStatus) {
-        scanStatus.textContent = message;
-    }
+    scanStatus.innerHTML = `
+        <div class="status-message">
+            <strong>${escapeHTML(status)}</strong>
+            <p>${escapeHTML(description)}</p>
+        </div>
+    `;
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| Summary handling
+|--------------------------------------------------------------------------
+*/
 
 function resetSummary() {
     if (totalCount) totalCount.textContent = "0";
@@ -43,42 +57,50 @@ function resetSummary() {
     if (highCount) highCount.textContent = "0";
     if (mediumCount) mediumCount.textContent = "0";
     if (lowCount) lowCount.textContent = "0";
-
-    if (resultsCount) {
-        resultsCount.textContent = "0 findings";
-    }
+    if (resultsCount) resultsCount.textContent = "0 findings";
 }
 
 function updateSummary(findings) {
-    const total = findings.length;
+    const summary = {
+        total: findings.length,
+        critical: 0,
+        high: 0,
+        medium: 0,
+        low: 0
+    };
 
-    const critical = findings.filter(
-        finding => finding.severity?.toLowerCase() === "critical"
-    ).length;
+    findings.forEach((finding) => {
+        const severity = String(finding.severity || "").toLowerCase();
 
-    const high = findings.filter(
-        finding => finding.severity?.toLowerCase() === "high"
-    ).length;
+        if (severity === "critical") {
+            summary.critical++;
+        } else if (severity === "high") {
+            summary.high++;
+        } else if (severity === "medium") {
+            summary.medium++;
+        } else if (severity === "low") {
+            summary.low++;
+        }
+    });
 
-    const medium = findings.filter(
-        finding => finding.severity?.toLowerCase() === "medium"
-    ).length;
-
-    const low = findings.filter(
-        finding => finding.severity?.toLowerCase() === "low"
-    ).length;
-
-    if (totalCount) totalCount.textContent = total;
-    if (criticalCount) criticalCount.textContent = critical;
-    if (highCount) highCount.textContent = high;
-    if (mediumCount) mediumCount.textContent = medium;
-    if (lowCount) lowCount.textContent = low;
+    if (totalCount) totalCount.textContent = summary.total;
+    if (criticalCount) criticalCount.textContent = summary.critical;
+    if (highCount) highCount.textContent = summary.high;
+    if (mediumCount) mediumCount.textContent = summary.medium;
+    if (lowCount) lowCount.textContent = summary.low;
 
     if (resultsCount) {
         resultsCount.textContent =
-            `${total} finding${total === 1 ? "" : "s"}`;
+            `${summary.total} finding${summary.total === 1 ? "" : "s"}`;
     }
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| Security and display helpers
+|--------------------------------------------------------------------------
+*/
 
 function escapeHTML(value) {
     return String(value ?? "")
@@ -93,37 +115,45 @@ function maskSecret(secret) {
     const value = String(secret ?? "");
 
     if (value.length <= 8) {
-        return "********";
+        return "••••••••";
     }
 
-    return (
-        escapeHTML(value.slice(0, 4)) +
-        "********" +
-        escapeHTML(value.slice(-4))
-    );
+    return `${value.slice(0, 4)}••••••••${value.slice(-4)}`;
 }
 
 function getSeverityClass(severity) {
-    const normalizedSeverity = String(severity ?? "medium")
-        .toLowerCase()
-        .replaceAll(" ", "-");
+    const normalized = String(severity || "low").toLowerCase();
 
-    return `severity-${normalizedSeverity}`;
+    if (["critical", "high", "medium", "low"].includes(normalized)) {
+        return normalized;
+    }
+
+    return "low";
 }
 
-function displayResults(findings) {
-    resultsContainer.innerHTML = "";
 
+/*
+|--------------------------------------------------------------------------
+| Results display
+|--------------------------------------------------------------------------
+*/
+
+function displayResults(findings) {
+    resetSummary();
     updateSummary(findings);
+
+    if (!resultsContainer) {
+        return;
+    }
 
     if (!findings || findings.length === 0) {
         resultsContainer.innerHTML = `
             <div class="empty-results">
-                <div class="empty-results-icon">✓</div>
+                <span class="empty-results-icon">✓</span>
                 <h3>No secrets detected</h3>
                 <p>
                     The scanner did not find any supported exposed
-                    credentials in the submitted content.
+                    credentials in this content.
                 </p>
             </div>
         `;
@@ -131,89 +161,219 @@ function displayResults(findings) {
         return;
     }
 
-    findings.forEach((finding, index) => {
-        const severity = finding.severity || "Medium";
-        const findingType = finding.type || "Unknown secret";
-        const description =
-            finding.description || "Potential exposed secret detected.";
+    resultsContainer.innerHTML = findings.map((finding, index) => {
+        const severity = getSeverityClass(finding.severity);
 
-        const lineNumber = finding.line ?? "Unknown";
-        const remediation =
+        const type = escapeHTML(
+            finding.type || finding.secret_type || "Unknown secret"
+        );
+
+        const description = escapeHTML(
+            finding.description || "Potential exposed secret detected."
+        );
+
+        const line = escapeHTML(finding.line ?? "Unknown");
+        const entropy = escapeHTML(finding.entropy ?? "N/A");
+
+        const match = maskSecret(
+            finding.match || finding.secret || finding.value || ""
+        );
+
+        const remediation = escapeHTML(
             finding.remediation ||
-            "Review this value and rotate the exposed credential if necessary.";
+            "Remove the exposed secret and rotate the affected credential."
+        );
 
-        const findingElement = document.createElement("article");
+        return `
+            <article class="finding-card severity-${severity}">
 
-        findingElement.className =
-            `finding-card ${getSeverityClass(severity)}`;
+                <div class="finding-top">
+                    <span class="finding-type">
+                        ${index + 1}. ${type}
+                    </span>
 
-        findingElement.innerHTML = `
-            <div class="finding-header">
-                <div>
-                    <p class="finding-number">
-                        FINDING ${index + 1}
-                    </p>
-
-                    <h3>${escapeHTML(findingType)}</h3>
+                    <span class="severity-badge ${severity}">
+                        ${severity.toUpperCase()}
+                    </span>
                 </div>
 
-                <span class="finding-severity">
-                    ${escapeHTML(severity.toUpperCase())}
-                </span>
-            </div>
+                <p class="finding-description">
+                    ${description}
+                </p>
 
-            <p class="finding-description">
-                ${escapeHTML(description)}
-            </p>
-
-            <div class="finding-details">
-                <div>
-                    <strong>Line</strong>
-                    <span>${escapeHTML(lineNumber)}</span>
+                <div class="finding-meta">
+                    <span>Line: ${line}</span>
+                    <span>Entropy: ${entropy}</span>
                 </div>
 
-                <div>
-                    <strong>Detected value</strong>
-                    <code>${maskSecret(finding.match)}</code>
+                <div class="secret-preview">
+                    ${escapeHTML(match)}
                 </div>
 
-                <div>
-                    <strong>Entropy</strong>
-                    <span>${escapeHTML(finding.entropy ?? "N/A")}</span>
+                <div class="remediation">
+                    <strong>Recommended remediation</strong>
+                    <p>${remediation}</p>
                 </div>
-            </div>
 
-            <div class="remediation">
-                <strong>Remediation guidance</strong>
-                <p>${escapeHTML(remediation)}</p>
+            </article>
+        `;
+    }).join("");
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Scan history
+|--------------------------------------------------------------------------
+*/
+
+function getScanHistory() {
+    try {
+        const savedHistory = localStorage.getItem(HISTORY_KEY);
+
+        if (!savedHistory) {
+            return [];
+        }
+
+        const parsedHistory = JSON.parse(savedHistory);
+
+        return Array.isArray(parsedHistory) ? parsedHistory : [];
+    } catch (error) {
+        console.error("Unable to load scan history:", error);
+        return [];
+    }
+}
+
+function saveScanHistory(history) {
+    try {
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    } catch (error) {
+        console.error("Unable to save scan history:", error);
+    }
+}
+
+function displayScanHistory() {
+    if (!historyContainer) {
+        return;
+    }
+
+    const history = getScanHistory();
+
+    if (history.length === 0) {
+        historyContainer.innerHTML = `
+            <div class="empty-results">
+                <span class="empty-results-icon">↺</span>
+                <h3>No scan history</h3>
+                <p>
+                    Your completed scans will appear here.
+                </p>
             </div>
         `;
 
-        resultsContainer.appendChild(findingElement);
-    });
+        return;
+    }
+
+    historyContainer.innerHTML = history.map((item) => {
+        const criticalClass = item.critical > 0 ? "critical" : "";
+        const highClass = item.high > 0 ? "high" : "";
+
+        return `
+            <div class="history-item">
+
+                <div class="history-item-main">
+                    <p class="history-item-title">
+                        ${escapeHTML(item.name)}
+                    </p>
+
+                    <p class="history-item-meta">
+                        ${escapeHTML(item.type)}
+                        ·
+                        ${escapeHTML(item.date)}
+                    </p>
+                </div>
+
+                <div class="history-item-stats">
+                    <span class="history-count">
+                        ${item.total} finding${item.total === 1 ? "" : "s"}
+                    </span>
+
+                    ${
+                        item.critical > 0
+                            ? `<span class="history-count ${criticalClass}">
+                                ${item.critical} critical
+                               </span>`
+                            : ""
+                    }
+
+                    ${
+                        item.high > 0
+                            ? `<span class="history-count ${highClass}">
+                                ${item.high} high
+                               </span>`
+                            : ""
+                    }
+                </div>
+
+            </div>
+        `;
+    }).join("");
 }
 
+function addScanToHistory(name, type, findings) {
+    const history = getScanHistory();
+
+    const critical = findings.filter(
+        (finding) =>
+            String(finding.severity || "").toLowerCase() === "critical"
+    ).length;
+
+    const high = findings.filter(
+        (finding) =>
+            String(finding.severity || "").toLowerCase() === "high"
+    ).length;
+
+    const historyItem = {
+        id: Date.now(),
+        name,
+        type,
+        total: findings.length,
+        critical,
+        high,
+        date: new Date().toLocaleString()
+    };
+
+    history.unshift(historyItem);
+
+    const limitedHistory = history.slice(0, MAX_HISTORY_ITEMS);
+
+    saveScanHistory(limitedHistory);
+    displayScanHistory();
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Source code scanning
+|--------------------------------------------------------------------------
+*/
+
 async function scanSourceCode() {
-    const content = sourceCode.value.trim();
+    const content = sourceCode?.value.trim();
 
     if (!content) {
         setScanStatus(
             "WAITING",
-            "Source code required",
-            "Please paste source code before scanning."
+            "Paste source code before starting a scan."
         );
 
-        sourceCode.focus();
         return;
     }
 
     scanButton.disabled = true;
-    scanButton.textContent = "Scanning...";
 
     setScanStatus(
         "SCANNING",
-        "Analyzing source code",
-        "Scanning your source code..."
+        "The scanner is inspecting your source code."
     );
 
     try {
@@ -223,74 +383,69 @@ async function scanSourceCode() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                content: content
+                content
             })
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(
-                data.error || "The backend returned an error."
-            );
+            throw new Error(data.error || "Source scan failed.");
         }
 
-        displayResults(data.findings || []);
+        const findings = data.findings || [];
+
+        displayResults(findings);
+        addScanToHistory(
+            "Source code scan",
+            "Source code",
+            findings
+        );
 
         setScanStatus(
             "COMPLETE",
-            "Scan completed successfully",
-            `Scan completed. Findings: ${data.count || 0}`
+            `Scan completed. ${findings.length} finding${findings.length === 1 ? "" : "s"} detected.`
         );
     } catch (error) {
-        console.error("Code scan error:", error);
+        console.error("Source scan error:", error);
 
         setScanStatus(
             "ERROR",
-            "Unable to complete scan",
-            `Scan failed: ${error.message}`
+            error.message || "Unable to connect to the Sentinel backend."
         );
-
-        resultsContainer.innerHTML = `
-            <div class="empty-results">
-                <div class="empty-results-icon">!</div>
-                <h3>Scan failed</h3>
-                <p>
-                    Make sure the Sentinel backend is running on
-                    http://127.0.0.1:5000.
-                </p>
-            </div>
-        `;
     } finally {
         scanButton.disabled = false;
-        scanButton.textContent = "Scan Code →";
     }
 }
 
+
+/*
+|--------------------------------------------------------------------------
+| File scanning
+|--------------------------------------------------------------------------
+*/
+
 async function scanUploadedFile() {
-    const file = fileInput.files[0];
+    const file = fileInput?.files?.[0];
 
     if (!file) {
         setScanStatus(
             "WAITING",
-            "File required",
-            "Please select a file before scanning."
+            "Choose a file before starting a file scan."
         );
 
         return;
     }
 
-    const formData = new FormData();
-    formData.append("file", file);
-
     fileScanButton.disabled = true;
-    fileScanButton.textContent = "Scanning...";
 
     setScanStatus(
         "SCANNING",
-        "Analyzing uploaded file",
-        `Scanning file: ${file.name}`
+        `Inspecting ${file.name}.`
     );
+
+    const formData = new FormData();
+    formData.append("file", file);
 
     try {
         const response = await fetch(`${API_BASE_URL}/scan-file`, {
@@ -301,59 +456,81 @@ async function scanUploadedFile() {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(
-                data.error || "The backend returned an error."
-            );
+            throw new Error(data.error || "File scan failed.");
         }
 
-        displayResults(data.findings || []);
+        const findings = data.findings || [];
+
+        displayResults(findings);
+        addScanToHistory(
+            file.name,
+            "File upload",
+            findings
+        );
 
         setScanStatus(
             "COMPLETE",
-            "File scan completed",
-            `File scan completed. Findings: ${data.count || 0}`
+            `${file.name} scanned successfully. ${findings.length} finding${findings.length === 1 ? "" : "s"} detected.`
         );
     } catch (error) {
         console.error("File scan error:", error);
 
         setScanStatus(
             "ERROR",
-            "Unable to complete file scan",
-            `File scan failed: ${error.message}`
+            error.message || "Unable to connect to the Sentinel backend."
         );
     } finally {
         fileScanButton.disabled = false;
-        fileScanButton.textContent = "Scan File →";
     }
 }
 
-function clearScanner() {
-    sourceCode.value = "";
-    fileInput.value = "";
 
-    if (selectedFileName) {
-        selectedFileName.textContent = "No file selected";
+/*
+|--------------------------------------------------------------------------
+| Clear scanner
+|--------------------------------------------------------------------------
+*/
+
+function clearScanner() {
+    if (sourceCode) {
+        sourceCode.value = "";
+    }
+
+    if (fileInput) {
+        fileInput.value = "";
+    }
+
+    if (selectedFile) {
+        selectedFile.textContent = "No file selected";
     }
 
     resetSummary();
 
-    resultsContainer.innerHTML = `
-        <div class="empty-results">
-            <div class="empty-results-icon">✓</div>
-            <h3>No findings yet</h3>
-            <p>
-                Run a scan to see detected secrets and
-                remediation guidance here.
-            </p>
-        </div>
-    `;
+    if (resultsContainer) {
+        resultsContainer.innerHTML = `
+            <div class="empty-results">
+                <span class="empty-results-icon">✓</span>
+                <h3>No scan results yet</h3>
+                <p>
+                    Start a scan to see exposed secrets and
+                    remediation guidance here.
+                </p>
+            </div>
+        `;
+    }
 
     setScanStatus(
         "READY",
-        "Waiting for scan",
-        "Ready to scan your source code."
+        "Choose a scanning method to begin."
     );
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| Event listeners
+|--------------------------------------------------------------------------
+*/
 
 if (scanButton) {
     scanButton.addEventListener("click", scanSourceCode);
@@ -369,12 +546,29 @@ if (clearButton) {
 
 if (fileInput) {
     fileInput.addEventListener("change", () => {
-        const file = fileInput.files[0];
+        const file = fileInput.files?.[0];
 
-        if (file && selectedFileName) {
-            selectedFileName.textContent = file.name;
-        } else if (selectedFileName) {
-            selectedFileName.textContent = "No file selected";
+        if (selectedFile) {
+            selectedFile.textContent = file
+                ? file.name
+                : "No file selected";
         }
     });
 }
+
+if (clearHistoryButton) {
+    clearHistoryButton.addEventListener("click", () => {
+        localStorage.removeItem(HISTORY_KEY);
+        displayScanHistory();
+    });
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Initial page setup
+|--------------------------------------------------------------------------
+*/
+
+resetSummary();
+displayScanHistory();
