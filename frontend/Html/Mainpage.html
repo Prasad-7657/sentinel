@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="../css/Mainpage.css">
+    <script src="app.js"></script>
+    <title>Sentinel | Secrets & Credential Exposure Detection</title>
+</head>
+<body>
+    <header class="navbar"> 
+        <div class="brand">
+             <div class="brand-icon">◈</div> 
+        <span>SENTINEL</span> 
+    </div> 
+    <nav class="nav-links"> 
+        <a href="dashboard.html">Dashboard</a>
+         <a href="capabilities.html">Capabilities</a> 
+         <a href="documentation.html">Documentation</a> 
+        </nav>
+          <div class="system-status"> 
+            <span class="status-dot"></span>
+             System Operational 
+        </div>
+    </header>
+
+     <main>
+
+        <!-- Hero Section -->
+        <section class="hero" id="dashboard">
+
+            <div class="hero-content">
+                <div class="eyebrow">
+                    <span class="eyebrow-line"></span>
+                    SECURITY INTELLIGENCE PLATFORM
+                </div>
+
+                <h1>
+                    Protect your codebase
+                    <span>before secrets become incidents.</span>
+                </h1>
+
+                <p class="hero-description">
+                    Detect exposed credentials, analyze security risks,
+                    and receive actionable remediation guidance —
+                    all in one place.
+                </p>
+
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" id="startScanBtn">
+                        Start a Scan
+                        <span>→</span>
+                    </button>
+
+                    <button class="btn btn-secondary" id="docsBtn">
+                        View Documentation
+                    </button>
+                </div>
+
+                <div class="hero-note">
+                    <span>✓</span>
+                    Built for developers. Designed for safer code.
+                </div>
+            </div>
+
+
+            <!-- Hero Visual / Status Card -->
+            <div class="hero-visual">
+                <div class="glow glow-one"></div>
+                <div class="glow glow-two"></div>
+
+                <div class="security-card">
+
+                    <div class="card-top">
+                        <div>
+                            <p class="card-label">SENTINEL ENGINE</p>
+                            <h3>Security Overview</h3>
+                        </div>
+
+                        <div class="shield-icon">⌾</div>
+                    </div>
+
+                    <div class="engine-status">
+                        <span class="status-dot"></span>
+                        <span>Scanner Operational</span>
+                        <span class="live-label">LIVE</span>
+                    </div>
+
+                    <div class="scan-progress">
+                        <div class="progress-header">
+                            <span>Detection Engine</span>
+                            <span class="ready-text">READY</span>
+                        </div>
+
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                    </div>
+
+                    <div class="card-divider"></div>
+
+                    <div class="engine-items">
+                        <div class="engine-item">
+                            <span class="item-icon">✓</span>
+                            <span>Pattern Detection</span>
+                            <strong>Ready</strong>
+                        </div>
+
+                           <div class="engine-item">
+                            <span class="item-icon">✓</span>
+                            <span>Entropy Analysis</span>
+                            <strong>Ready</strong>
+                        </div>
+
+                        <div class="engine-item">
+                            <span class="item-icon">✓</span>
+                            <span>Safe Validation</span>
+                            <strong>Ready</strong>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+        <section class="stats-section">
+
+            <div class="stat-card">
+                <span class="stat-number">0</span>
+                <span class="stat-label">Scans Completed</span>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-number">0</span>
+                <span class="stat-label">Findings Detected</span>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-number critical">0</span>
+                <span class="stat-label">Critical Findings</span>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-number">0</span>
+                <span class="stat-label">Detection Health</span>
+            </div>
+
+        </section>
+
+
+        <!-- Capabilities -->
+        <section class="capabilities-section" id="capabilities">
+
+            <div class="section-heading">
+                <div>
+                    <p class="section-eyebrow">DETECTION CAPABILITIES</p>
+                    <h2>Find what should<br><span>never be exposed.</span></h2>
+                </div>
+
+                <p class="section-description">
+                    Sentinel analyzes source code, configuration files,
+                    repositories, and other development artifacts to
+                    identify potentially exposed secrets.
+                </p>
+            </div>
+
+
+            <div class="capability-grid">
+
+                <div class="capability-card">
+                    <div class="capability-icon">⌘</div>
+                    <h3>API Keys & Tokens</h3>
+                    <p>
+                        Identify exposed API keys, access tokens,
+                        and authentication credentials.
+                    </p>
+                    <span class="card-arrow">↗️</span>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon">♢</div>
+                    <h3>Private Keys</h3>
+                    <p>
+                        Detect private-key material and other
+                        high-risk cryptographic credentials.
+                    </p>
+                    <span class="card-arrow">↗️</span>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon">⌁</div>
+                    <h3>Passwords & Secrets</h3>
+                    <p>
+                        Discover hardcoded passwords, secrets,
+                        and sensitive configuration values.
+                    </p>
+
+        </body>
+</html>
