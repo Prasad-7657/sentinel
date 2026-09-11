@@ -11,7 +11,6 @@
 </head>
 
 <body>
-    <!-- Navigation -->
     <header class="navbar">
         <div class="brand">
             <div class="brand-icon">◈</div>
@@ -20,6 +19,7 @@
 
         <nav class="nav-links">
             <a href="Mainpage.html">Home</a>
+            <a href="dashboard.html" class="active">Dashboard</a>
             <a href="capabilities.html">Capabilities</a>
             <a href="documentation.html">Documentation</a>
         </nav>
@@ -31,7 +31,6 @@
     </header>
 
     <main class="dashboard-page">
-        <!-- Dashboard Heading -->
         <section class="dashboard-hero">
             <div>
                 <p class="section-eyebrow">SECURITY INTELLIGENCE PLATFORM</p>
@@ -53,7 +52,6 @@
             </div>
         </section>
 
-        <!-- Summary Cards -->
         <section class="summary-grid">
             <div class="summary-card">
                 <div class="summary-card-top">
@@ -62,10 +60,6 @@
                 </div>
 
                 <strong id="total-count">0</strong>
-<strong id="critical-count">0</strong>
-<strong id="high-count">0</strong>
-<strong id="medium-count">0</strong>
-<strong id="low-count">0</strong>
                 <p>Detected security issues</p>
             </div>
 
@@ -93,8 +87,6 @@
                 <div class="summary-card-top">
                     <span class="summary-label">SCAN STATUS</span>
                     <span class="summary-icon">✓</span>
-<span id="medium-count">0</span>
-<span id="low-count">0</span>
                 </div>
 
                 <strong id="scanStatusValue">READY</strong>
@@ -102,9 +94,11 @@
             </div>
         </section>
 
-        <!-- Scanner Workspace -->
+        <!-- Required by app.js -->
+        <span id="medium-count" hidden>0</span>
+        <span id="low-count" hidden>0</span>
+
         <section class="scanner-layout">
-            <!-- Code Scanner -->
             <div class="scanner-panel">
                 <div class="panel-heading">
                     <div>
@@ -125,7 +119,8 @@
                 </label>
 
                 <textarea
-                    id="sourceCode"
+                    id="source-code"
+                    class="code-input"
                     placeholder="Paste source code here...
 
 Example:
@@ -134,20 +129,24 @@ password = &quot;demo-password&quot;"
                 ></textarea>
 
                 <div class="scanner-actions">
-                    <button id="scan-button" class="btn btn-primary">
+                    <button
+                        id="scan-button"
+                        class="btn btn-primary"
+                        type="button"
+                    >
                         Scan Code →
                     </button>
 
                     <button
-                        id="clearBtn"
+                        id="clear-button"
                         class="btn btn-secondary"
                         type="button"
+                    >
                         Clear
                     </button>
                 </div>
             </div>
 
-            <!-- File Scanner -->
             <div class="scanner-panel upload-panel">
                 <div class="panel-heading">
                     <div>
@@ -163,10 +162,15 @@ password = &quot;demo-password&quot;"
                     for secret detection.
                 </p>
 
-                <label for="file-input" class="file-drop-zone">
+                <label
+                    for="file-input"
+                    class="file-drop-zone"
+                >
                     <span class="upload-icon">⇧</span>
                     <strong>Select a file</strong>
-                    <span>Python, JavaScript, JSON, YAML, TXT and more</span>
+                    <span>
+                        Python, JavaScript, JSON, YAML, TXT and more
+                    </span>
                 </label>
 
                 <input
@@ -175,30 +179,33 @@ password = &quot;demo-password&quot;"
                     class="hidden-file-input"
                 >
 
-                <p id="selectedFileName" class="selected-file">
+                <p
+                    id="selectedFileName"
+                    class="selected-file"
+                >
                     No file selected
                 </p>
 
                 <button
                     id="file-scan-button"
                     class="btn btn-primary file-scan-button"
+                    type="button"
                 >
                     Scan File →
                 </button>
             </div>
         </section>
 
-        <!-- Status Message -->
         <section class="scan-status-panel">
             <div class="status-message">
                 <span class="status-dot"></span>
+
                 <span id="scan-status">
                     Ready to scan your source code.
                 </span>
             </div>
         </section>
 
-        <!-- Results -->
         <section class="results-section">
             <div class="results-heading">
                 <div>
@@ -206,15 +213,23 @@ password = &quot;demo-password&quot;"
                     <h2>Detected findings</h2>
                 </div>
 
-                <span id="resultsCount" class="results-count">
+                <span
+                    id="resultsCount"
+                    class="results-count"
+                >
                     0 findings
                 </span>
             </div>
 
-            <div id="results" class="results-container">
+            <div
+                id="results"
+                class="results-container"
+            >
                 <div class="empty-results">
                     <div class="empty-results-icon">✓</div>
+
                     <h3>No findings yet</h3>
+
                     <p>
                         Run a scan to see detected secrets and
                         remediation guidance here.

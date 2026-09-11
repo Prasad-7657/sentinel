@@ -1,10 +1,13 @@
+const API_BASE_URL = "http://127.0.0.1:5000";
+
 const scanButton = document.getElementById("scan-button");
+const clearButton = document.getElementById("clear-button");
 const fileInput = document.getElementById("file-input");
 const fileScanButton = document.getElementById("file-scan-button");
 
-const sourceCodeInput = document.getElementById("source-code");
+const sourceCode = document.getElementById("source-code");
 const resultsContainer = document.getElementById("results");
-const statusContainer = document.getElementById("scan-status");
+const scanStatus = document.getElementById("scan-status");
 
 const totalCount = document.getElementById("total-count");
 const criticalCount = document.getElementById("critical-count");
@@ -12,65 +15,255 @@ const highCount = document.getElementById("high-count");
 const mediumCount = document.getElementById("medium-count");
 const lowCount = document.getElementById("low-count");
 
-if (scanButton) {
-    scanButton.addEventListener("click", scanContent);
+const scanStatusValue = document.getElementById("scanStatusValue");
+const scanStatusDescription = document.getElementById(
+    "scanStatusDescription"
+);
+
+const selectedFileName = document.getElementById("selectedFileName");
+const resultsCount = document.getElementById("resultsCount");
+
+function setScanStatus(status, description, message) {
+    if (scanStatusValue) {
+        scanStatusValue.textContent = status;
+    }
+
+    if (scanStatusDescription) {
+        scanStatusDescription.textContent = description;
+    }
+
+    if (scanStatus) {
+        scanStatus.textContent = message;
+    }
 }
 
-if (fileScanButton) {
-    fileScanButton.addEventListener("click", scanUploadedFile);
+function resetSummary() {
+    if (totalCount) totalCount.textContent = "0";
+    if (criticalCount) criticalCount.textContent = "0";
+    if (highCount) highCount.textContent = "0";
+    if (mediumCount) mediumCount.textContent = "0";
+    if (lowCount) lowCount.textContent = "0";
+
+    if (resultsCount) {
+        resultsCount.textContent = "0 findings";
+    }
 }
 
-async function scanContent() {
-    const content = sourceCodeInput.value.trim();
+function updateSummary(findings) {
+    const total = findings.length;
+
+    const critical = findings.filter(
+        finding => finding.severity?.toLowerCase() === "critical"
+    ).length;
+
+    const high = findings.filter(
+        finding => finding.severity?.toLowerCase() === "high"
+    ).length;
+
+    const medium = findings.filter(
+        finding => finding.severity?.toLowerCase() === "medium"
+    ).length;
+
+    const low = findings.filter(
+        finding => finding.severity?.toLowerCase() === "low"
+    ).length;
+
+    if (totalCount) totalCount.textContent = total;
+    if (criticalCount) criticalCount.textContent = critical;
+    if (highCount) highCount.textContent = high;
+    if (mediumCount) mediumCount.textContent = medium;
+    if (lowCount) lowCount.textContent = low;
+
+    if (resultsCount) {
+        resultsCount.textContent =
+            `${total} finding${total === 1 ? "" : "s"}`;
+    }
+}
+
+function escapeHTML(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function maskSecret(secret) {
+    const value = String(secret ?? "");
+
+    if (value.length <= 8) {
+        return "********";
+    }
+
+    return (
+        escapeHTML(value.slice(0, 4)) +
+        "********" +
+        escapeHTML(value.slice(-4))
+    );
+}
+
+function getSeverityClass(severity) {
+    const normalizedSeverity = String(severity ?? "medium")
+        .toLowerCase()
+        .replaceAll(" ", "-");
+
+    return `severity-${normalizedSeverity}`;
+}
+
+function displayResults(findings) {
+    resultsContainer.innerHTML = "";
+
+    updateSummary(findings);
+
+    if (!findings || findings.length === 0) {
+        resultsContainer.innerHTML = `
+            <div class="empty-results">
+                <div class="empty-results-icon">✓</div>
+                <h3>No secrets detected</h3>
+                <p>
+                    The scanner did not find any supported exposed
+                    credentials in the submitted content.
+                </p>
+            </div>
+        `;
+
+        return;
+    }
+
+    findings.forEach((finding, index) => {
+        const severity = finding.severity || "Medium";
+        const findingType = finding.type || "Unknown secret";
+        const description =
+            finding.description || "Potential exposed secret detected.";
+
+        const lineNumber = finding.line ?? "Unknown";
+        const remediation =
+            finding.remediation ||
+            "Review this value and rotate the exposed credential if necessary.";
+
+        const findingElement = document.createElement("article");
+
+        findingElement.className =
+            `finding-card ${getSeverityClass(severity)}`;
+
+        findingElement.innerHTML = `
+            <div class="finding-header">
+                <div>
+                    <p class="finding-number">
+                        FINDING ${index + 1}
+                    </p>
+
+                    <h3>${escapeHTML(findingType)}</h3>
+                </div>
+
+                <span class="finding-severity">
+                    ${escapeHTML(severity.toUpperCase())}
+                </span>
+            </div>
+
+            <p class="finding-description">
+                ${escapeHTML(description)}
+            </p>
+
+            <div class="finding-details">
+                <div>
+                    <strong>Line</strong>
+                    <span>${escapeHTML(lineNumber)}</span>
+                </div>
+
+                <div>
+                    <strong>Detected value</strong>
+                    <code>${maskSecret(finding.match)}</code>
+                </div>
+
+                <div>
+                    <strong>Entropy</strong>
+                    <span>${escapeHTML(finding.entropy ?? "N/A")}</span>
+                </div>
+            </div>
+
+            <div class="remediation">
+                <strong>Remediation guidance</strong>
+                <p>${escapeHTML(remediation)}</p>
+            </div>
+        `;
+
+        resultsContainer.appendChild(findingElement);
+    });
+}
+
+async function scanSourceCode() {
+    const content = sourceCode.value.trim();
 
     if (!content) {
-        statusContainer.textContent = "Please enter code to scan.";
+        setScanStatus(
+            "WAITING",
+            "Source code required",
+            "Please paste source code before scanning."
+        );
+
+        sourceCode.focus();
         return;
     }
 
     scanButton.disabled = true;
-    fileScanButton.disabled = true;
-    statusContainer.textContent = "Scanning...";
-    resultsContainer.innerHTML = "";
+    scanButton.textContent = "Scanning...";
+
+    setScanStatus(
+        "SCANNING",
+        "Analyzing source code",
+        "Scanning your source code..."
+    );
 
     try {
-        const response = await fetch(
-            "http://127.0.0.1:5000/scan",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    content: content
-                })
-            }
-        );
+        const response = await fetch(`${API_BASE_URL}/scan`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                content: content
+            })
+        });
 
-        const result = await response.json();
+        const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(result.error || "Scan failed");
+            throw new Error(
+                data.error || "The backend returned an error."
+            );
         }
 
-        statusContainer.textContent =
-            `Scan completed. Findings: ${result.count}`;
+        displayResults(data.findings || []);
 
-        displayResults(result.findings || []);
+        setScanStatus(
+            "COMPLETE",
+            "Scan completed successfully",
+            `Scan completed. Findings: ${data.count || 0}`
+        );
     } catch (error) {
-        statusContainer.textContent = error.message;
+        console.error("Code scan error:", error);
+
+        setScanStatus(
+            "ERROR",
+            "Unable to complete scan",
+            `Scan failed: ${error.message}`
+        );
 
         resultsContainer.innerHTML = `
-            <div class="finding-card error">
+            <div class="empty-results">
+                <div class="empty-results-icon">!</div>
                 <h3>Scan failed</h3>
-                <p>${escapeHtml(error.message)}</p>
+                <p>
+                    Make sure the Sentinel backend is running on
+                    http://127.0.0.1:5000.
+                </p>
             </div>
         `;
-
-        updateSummary([]);
     } finally {
         scanButton.disabled = false;
-        fileScanButton.disabled = false;
+        scanButton.textContent = "Scan Code →";
     }
 }
 
@@ -78,7 +271,12 @@ async function scanUploadedFile() {
     const file = fileInput.files[0];
 
     if (!file) {
-        statusContainer.textContent = "Please select a file first.";
+        setScanStatus(
+            "WAITING",
+            "File required",
+            "Please select a file before scanning."
+        );
+
         return;
     }
 
@@ -86,190 +284,97 @@ async function scanUploadedFile() {
     formData.append("file", file);
 
     fileScanButton.disabled = true;
-    scanButton.disabled = true;
-    statusContainer.textContent = `Scanning ${file.name}...`;
-    resultsContainer.innerHTML = "";
+    fileScanButton.textContent = "Scanning...";
+
+    setScanStatus(
+        "SCANNING",
+        "Analyzing uploaded file",
+        `Scanning file: ${file.name}`
+    );
 
     try {
-        const response = await fetch(
-            "http://127.0.0.1:5000/scan-file",
-            {
-                method: "POST",
-                body: formData
-            }
-        );
+        const response = await fetch(`${API_BASE_URL}/scan-file`, {
+            method: "POST",
+            body: formData
+        });
 
-        const result = await response.json();
+        const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(result.error || "File scan failed");
+            throw new Error(
+                data.error || "The backend returned an error."
+            );
         }
 
-        statusContainer.textContent =
-            `File scan completed. Findings: ${result.count}`;
+        displayResults(data.findings || []);
 
-        displayResults(result.findings || []);
+        setScanStatus(
+            "COMPLETE",
+            "File scan completed",
+            `File scan completed. Findings: ${data.count || 0}`
+        );
     } catch (error) {
-        statusContainer.textContent = error.message;
+        console.error("File scan error:", error);
 
-        resultsContainer.innerHTML = `
-            <div class="finding-card error">
-                <h3>File scan failed</h3>
-                <p>${escapeHtml(error.message)}</p>
-            </div>
-        `;
-
-        updateSummary([]);
+        setScanStatus(
+            "ERROR",
+            "Unable to complete file scan",
+            `File scan failed: ${error.message}`
+        );
     } finally {
         fileScanButton.disabled = false;
-        scanButton.disabled = false;
+        fileScanButton.textContent = "Scan File →";
     }
 }
 
-function displayResults(findings) {
-    updateSummary(findings);
+function clearScanner() {
+    sourceCode.value = "";
+    fileInput.value = "";
 
-    if (findings.length === 0) {
-        resultsContainer.innerHTML = `
-            <div class="finding-card safe">
-                <h3>No secrets detected</h3>
-                <p>The scanned content appears clean.</p>
-            </div>
-        `;
-        return;
+    if (selectedFileName) {
+        selectedFileName.textContent = "No file selected";
     }
 
-    resultsContainer.innerHTML = findings.map((finding) => {
-        const severity = finding.severity || "unknown";
+    resetSummary();
 
-        const remediationMessage =
-            finding.remediation?.message ||
-            "Review and remove this sensitive information.";
+    resultsContainer.innerHTML = `
+        <div class="empty-results">
+            <div class="empty-results-icon">✓</div>
+            <h3>No findings yet</h3>
+            <p>
+                Run a scan to see detected secrets and
+                remediation guidance here.
+            </p>
+        </div>
+    `;
 
-        const remediationSteps =
-            finding.remediation?.steps || [];
-
-        return `
-            <article class="finding-card ${escapeHtml(severity)}">
-                <div class="finding-header">
-                    <h3>${escapeHtml(finding.description)}</h3>
-
-                    <span class="severity-badge ${escapeHtml(severity)}">
-                        ${escapeHtml(severity.toUpperCase())}
-                    </span>
-                </div>
-
-                <p>
-                    <strong>Type:</strong>
-                    ${escapeHtml(finding.type)}
-                </p>
-
-                <p>
-                    <strong>Line:</strong>
-                    ${escapeHtml(String(finding.line))}
-                </p>
-
-                <p>
-                    <strong>Match:</strong>
-                    <code>${escapeHtml(maskSecret(finding.match))}</code>
-                </p>
-
-                <p>
-                    <strong>Entropy:</strong>
-                    ${escapeHtml(String(finding.entropy))}
-                </p>
-
-                <div class="remediation">
-                    <h4>Recommended action</h4>
-
-                    <p>
-                        ${escapeHtml(remediationMessage)}
-                    </p>
-
-                    <ul>
-                        ${remediationSteps.map((step) => `
-                            <li>${escapeHtml(step)}</li>
-                        `).join("")}
-                    </ul>
-                </div>
-            </article>
-        `;
-    }).join("");
+    setScanStatus(
+        "READY",
+        "Waiting for scan",
+        "Ready to scan your source code."
+    );
 }
 
-function updateSummary(findings) {
-    const summary = {
-        total: findings.length,
-        critical: 0,
-        high: 0,
-        medium: 0,
-        low: 0
-    };
-
-    findings.forEach((finding) => {
-        const severity = String(
-            finding.severity || "unknown"
-        ).toLowerCase();
-
-        if (severity === "critical") {
-            summary.critical++;
-        } else if (severity === "high") {
-            summary.high++;
-        } else if (severity === "medium") {
-            summary.medium++;
-        } else if (severity === "low") {
-            summary.low++;
-        }
-    });
-
-    if (totalCount) {
-        totalCount.textContent = summary.total;
-    }
-
-    if (criticalCount) {
-        criticalCount.textContent = summary.critical;
-    }
-
-    if (highCount) {
-        highCount.textContent = summary.high;
-    }
-
-    if (mediumCount) {
-        mediumCount.textContent = summary.medium;
-    }
-
-    if (lowCount) {
-        lowCount.textContent = summary.low;
-    }
+if (scanButton) {
+    scanButton.addEventListener("click", scanSourceCode);
 }
 
-function maskSecret(value) {
-    if (!value) {
-        return "Unavailable";
-    }
-
-    if (value.length <= 8) {
-        return "********";
-    }
-
-    return `${value.slice(0, 4)}********${value.slice(-4)}`;
+if (fileScanButton) {
+    fileScanButton.addEventListener("click", scanUploadedFile);
 }
-
-function escapeHtml(value) {
-    return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-}
-const clearButton = document.getElementById("clear-button");
 
 if (clearButton) {
-    clearButton.addEventListener("click", () => {
-        sourceCodeInput.value = "";
-        resultsContainer.innerHTML = "";
-        statusContainer.textContent = "Ready to scan your source code.";
-        updateSummary([]);
+    clearButton.addEventListener("click", clearScanner);
+}
+
+if (fileInput) {
+    fileInput.addEventListener("change", () => {
+        const file = fileInput.files[0];
+
+        if (file && selectedFileName) {
+            selectedFileName.textContent = file.name;
+        } else if (selectedFileName) {
+            selectedFileName.textContent = "No file selected";
+        }
     });
 }
