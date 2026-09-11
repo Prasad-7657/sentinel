@@ -1487,3 +1487,128 @@ body::before {
     gap: 10px;
     text-decoration: none;
 }
+.page-hero {
+    width: min(900px, 90%);
+    margin: 90px auto 50px;
+    text-align: center;
+}
+
+.page-hero h1 {
+    margin: 20px 0;
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 1.05;
+}
+
+.page-hero h1 span {
+    display: block;
+    color: #35e6c1;
+}
+
+.page-hero p {
+    max-width: 680px;
+    margin: 0 auto;
+    color: #a8b3c7;
+    font-size: 17px;
+    line-height: 1.8;
+}
+
+.workflow-section {
+    width: min(1180px, 90%);
+    margin: 80px auto;
+}
+
+.workflow-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.workflow-step {
+    padding: 24px;
+    border: 1px solid #26344a;
+    border-radius: 16px;
+    background: rgba(16, 24, 39, 0.8);
+}
+
+.workflow-number {
+    color: #35e6c1;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.workflow-step h3 {
+    margin: 18px 0 10px;
+}
+
+.workflow-step p {
+    color: #a8b3c7;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.capabilities-cta {
+    width: min(800px, 90%);
+    margin: 80px auto;
+    padding: 45px 25px;
+    border: 1px solid #26344a;
+    border-radius: 20px;
+    background: rgba(16, 24, 39, 0.85);
+    text-align: center;
+}
+
+.capabilities-cta h2 {
+    margin: 0 0 12px;
+    font-size: 32px;
+}
+
+.capabilities-cta p {
+    margin-bottom: 25px;
+    color: #a8b3c7;
+}
+
+.site-footer {
+    padding: 30px;
+    border-top: 1px solid #26344a;
+    color: #91a0b8;
+    text-align: center;
+    font-size: 13px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: #35e6c1;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+@media (max-width: 900px) {
+    .workflow-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .workflow-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .page-hero {
+        margin-top: 55px;
+    }
+
+    .page-hero h1 {
+        font-size: 38px;
+    }
+}

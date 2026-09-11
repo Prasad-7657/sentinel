@@ -1,9 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../css/Mainpage.css">
+
+    <title>Sentinel | Capabilities</title>
 </head>
+
 <body>
-    <h1>hello</h1>
+    <header class="navbar">
+        <div class="brand">
+            <div class="brand-icon">◈</div>
+            <span>SENTINEL</span>
+        </div>
+
+        <nav class="nav-links">
+            <a href="Mainpage.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="capabilities.html" class="active">Capabilities</a>
+            <a href="documentation.html">Documentation</a>
+        </nav>
+
+        <div class="system-status">
+            <span class="status-dot"></span>
+            System Operational
+        </div>
+    </header>
+
+    <main>
+        <!-- Page Hero -->
+        <section class="page-hero">
+            <div class="eyebrow">
+                <span class="eyebrow-line"></span>
+                SENTINEL CAPABILITIES
+            </div>
+
+            <h1>
+                Security intelligence
+                <span>for safer development.</span>
+            </h1>
+
+            <p>
+                Sentinel helps developers detect exposed credentials,
+                understand security risks, and take corrective action
+                before secrets become incidents.
+            </p>
+        </section>
+
+        <!-- Capabilities Section -->
+        <section class="capabilities-section">
+            <div class="section-heading">
+                <div>
+                    <p class="section-eyebrow">WHAT SENTINEL CAN DO</p>
+
+                    <h2>
+                        Detect. Analyze.
+                        <br>
+                        <span>Remediate.</span>
+                    </h2>
+                </div>
+
+                <p class="section-description">
+                    Our detection engine examines source code and uploaded
+                    files for common credential exposure patterns.
+                </p>
+            </div>
+
+            <div class="capability-grid">
+                <div class="capability-card">
+                    <div class="capability-icon">⌘</div>
+
+                    <h3>API Keys & Tokens</h3>
+
+                    <p>
+                        Detect exposed API keys, access tokens, and
+                        authentication credentials inside source code.
+                    </p>
+
+                    <span class="card-arrow">↗</span>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon">♢</div>
+
+                    <h3>Private Keys</h3>
+
+                    <p>
+                        Identify private-key material and other
+                        high-risk cryptographic credentials.
+                    </p>
+
+                    <span class="card-arrow">↗</span>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon">⌁</div>
+
+                    <h3>Passwords & Secrets</h3>
+
+                    <p>
+                        Discover hardcoded passwords and sensitive
+                        configuration values.
+                    </p>
+
+                    <span class="card-arrow">↗</span>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon">▣</div>
+
+                    <h3>Source Code Scanning</h3>
+
+                    <p>
+                        Scan pasted code directly through the Sentinel
+                        dashboard and receive instant findings.
+                    </p>
+
+                    <span class="card-arrow">↗</span>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon">⇧</div>
+
+                    <h3>File Upload Scanning</h3>
+
+                    <p>
+                        Upload supported source-code and text files
+                        for automated secret detection.
+                    </p>
+
+                    <span class="card-arrow">↗</span>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon">◉</div>
+
+                    <h3>Entropy Analysis</h3>
+
+                    <p>
+                        Analyze the randomness of detected values to
+                        help identify potentially sensitive secrets.
+                    </p>
+
+                    <span class="card-arrow">↗</span>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon">!</div>
+
+                    <h3>Severity Classification</h3>
+
+                    <p>
+                        Assign severity levels such as Critical, High,
+                        Medium, and Low to detected findings.
+                    </p>
+
+                    <span class="card-arrow">↗</span>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon">✓</div>
+
+                    <h3>Remediation Guidance</h3>
+
+                    <p>
+                        Receive practical guidance for removing exposed
+                        credentials and improving code security.
+                    </p>
+
+                    <span class="card-arrow">↗</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Workflow Section -->
+        <section class="workflow-section">
+            <div class="section-heading">
+                <div>
+                    <p class="section-eyebrow">HOW IT WORKS</p>
+
+                    <h2>
+                        From exposed secret
+                        <br>
+                        <span>to actionable fix.</span>
+                    </h2>
+                </div>
+            </div>
+
+            <div class="workflow-grid">
+                <div class="workflow-step">
+                    <span class="workflow-number">01</span>
+                    <h3>Submit Code</h3>
+                    <p>
+                        Paste source code or upload a supported file
+                        through the Sentinel dashboard.
+                    </p>
+                </div>
+
+                <div class="workflow-step">
+                    <span class="workflow-number">02</span>
+                    <h3>Analyze Content</h3>
+                    <p>
+                        Sentinel checks the content for known secret
+                        patterns and calculates entropy.
+                    </p>
+                </div>
+
+                <div class="workflow-step">
+                    <span class="workflow-number">03</span>
+                    <h3>Review Findings</h3>
+                    <p>
+                        Review the detected secret type, line number,
+                        severity, and masked match.
+                    </p>
+                </div>
+
+                <div class="workflow-step">
+                    <span class="workflow-number">04</span>
+                    <h3>Fix the Risk</h3>
+                    <p>
+                        Follow the remediation guidance to remove
+                        exposed credentials from your codebase.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="capabilities-cta">
+            <h2>Ready to scan your code?</h2>
+
+            <p>
+                Start checking your source code for exposed secrets
+                with Sentinel.
+            </p>
+
+            <a href="dashboard.html" class="btn btn-primary">
+                Open Dashboard →
+            </a>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>© 2026 Sentinel. Built for safer code.</p>
+    </footer>
 </body>
 </html>
