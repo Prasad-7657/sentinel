@@ -64,6 +64,29 @@ Flask
 
 Flask-CORS
 
+
+# Backend Setup
+
+cd sentinel
+python3 -m venv backend/.venv
+source backend/.venv/bin/activate
+pip install -r backend/requirements.txt
+python3 backend/app.py
+
+#The backend runs at:
+http://127.0.0.1:5000
+
+
+#Frontend Setup
+cd sentinel/frontend
+python3 -m http.server 8000
+
+
+#Open:
+http://127.0.0.1:8000/Html/dashboard.html
+
+
+
 # Future Improvements
 
 SQLite scan history
