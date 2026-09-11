@@ -1,9 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentinel Dashboard</title>
+    <link rel="stylesheet" href="../css/Mainpage.css">
 </head>
 <body>
-    <h1>welcome</h1>
+    <main>
+        <h1>Sentinel Dashboard</h1>
+        <p>Scan source code for exposed secrets and credentials.</p>
+
+        <label for="source-code">Source code to scan</label>
+        <textarea
+            id="source-code"
+            rows="12"
+            placeholder="Paste code here..."
+        ></textarea>
+
+        <button id="scan-button">Scan</button>
+
+        <p id="scan-status"></p>
+
+        <section>
+            <h2>Scan Results</h2>
+            <pre id="results">No scan performed yet.</pre>
+        </section>
+    </main>
+
+    <script src="../javascript/app.js"></script>
 </body>
 </html>
