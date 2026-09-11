@@ -1,9 +1,306 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../css/Mainpage.css">
+
+    <title>Sentinel | Documentation</title>
 </head>
+
 <body>
-    <h1>hello</h1>
+    <header class="navbar">
+        <div class="brand">
+            <div class="brand-icon">◈</div>
+            <span>SENTINEL</span>
+        </div>
+
+        <nav class="nav-links">
+            <a href="Mainpage.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="capabilities.html">Capabilities</a>
+            <a href="documentation.html" class="active">Documentation</a>
+        </nav>
+
+        <div class="system-status">
+            <span class="status-dot"></span>
+            System Operational
+        </div>
+    </header>
+
+    <main>
+        <!-- Documentation Hero -->
+        <section class="page-hero">
+            <div class="eyebrow">
+                <span class="eyebrow-line"></span>
+                SENTINEL DOCUMENTATION
+            </div>
+
+            <h1>
+                Scan smarter.
+                <span>Fix security risks faster.</span>
+            </h1>
+
+            <p>
+                Learn how to use Sentinel to scan source code, upload files,
+                review detected secrets, and follow remediation guidance.
+            </p>
+        </section>
+
+        <!-- Quick Start -->
+        <section class="documentation-section">
+            <div class="section-heading">
+                <div>
+                    <p class="section-eyebrow">GETTING STARTED</p>
+
+                    <h2>
+                        Start scanning in
+                        <br>
+                        <span>four simple steps.</span>
+                    </h2>
+                </div>
+            </div>
+
+            <div class="documentation-grid">
+                <article class="documentation-card">
+                    <span class="documentation-number">01</span>
+                    <h3>Open the Dashboard</h3>
+                    <p>
+                        Open the Sentinel dashboard from the main page
+                        or use the Dashboard link in the navigation bar.
+                    </p>
+                </article>
+
+                <article class="documentation-card">
+                    <span class="documentation-number">02</span>
+                    <h3>Enter Source Code</h3>
+                    <p>
+                        Paste source code into the editor or select a
+                        supported source-code or text file.
+                    </p>
+                </article>
+
+                <article class="documentation-card">
+                    <span class="documentation-number">03</span>
+                    <h3>Run the Scan</h3>
+                    <p>
+                        Click Scan Code for pasted content or Scan File
+                        to analyze an uploaded file.
+                    </p>
+                </article>
+
+                <article class="documentation-card">
+                    <span class="documentation-number">04</span>
+                    <h3>Review the Results</h3>
+                    <p>
+                        Check the finding type, line number, severity,
+                        entropy, and recommended remediation steps.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <!-- Detection Types -->
+        <section class="documentation-section">
+            <div class="section-heading">
+                <div>
+                    <p class="section-eyebrow">DETECTION ENGINE</p>
+
+                    <h2>
+                        What Sentinel
+                        <br>
+                        <span>currently detects.</span>
+                    </h2>
+                </div>
+            </div>
+
+            <div class="documentation-list">
+                <div class="documentation-list-item">
+                    <div class="list-icon">⌘</div>
+
+                    <div>
+                        <h3>AWS Access Keys</h3>
+                        <p>
+                            Detects AWS access-key patterns that may have
+                            been accidentally included in source code.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="documentation-list-item">
+                    <div class="list-icon">◈</div>
+
+                    <div>
+                        <h3>GitHub Tokens</h3>
+                        <p>
+                            Detects common GitHub token formats and
+                            marks them as high-risk credentials.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="documentation-list-item">
+                    <div class="list-icon">♢</div>
+
+                    <div>
+                        <h3>Private Keys</h3>
+                        <p>
+                            Detects private-key headers such as RSA,
+                            EC, and other private-key formats.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="documentation-list-item">
+                    <div class="list-icon">⌁</div>
+
+                    <div>
+                        <h3>Hardcoded Passwords</h3>
+                        <p>
+                            Detects password assignments containing
+                            quoted values in source code.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- API Documentation -->
+        <section class="documentation-section">
+            <div class="section-heading">
+                <div>
+                    <p class="section-eyebrow">API REFERENCE</p>
+
+                    <h2>
+                        Available
+                        <br>
+                        <span>backend endpoints.</span>
+                    </h2>
+                </div>
+            </div>
+
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="method get">GET</span>
+                    <code>/health</code>
+                </div>
+
+                <p>
+                    Checks whether the Sentinel backend is running.
+                </p>
+            </div>
+
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="method post">POST</span>
+                    <code>/scan</code>
+                </div>
+
+                <p>
+                    Scans pasted text submitted as JSON.
+                </p>
+
+                <h4>Request body</h4>
+
+                <pre><code>{
+    "content": "password = \"demo-password\""
+}</code></pre>
+            </div>
+
+            <div class="api-card">
+                <div class="api-header">
+                    <span class="method post">POST</span>
+                    <code>/scan-file</code>
+                </div>
+
+                <p>
+                    Scans a supported uploaded file using multipart form data.
+                </p>
+
+                <h4>Form field</h4>
+
+                <pre><code>file: example.py</code></pre>
+            </div>
+        </section>
+
+        <!-- Result Explanation -->
+        <section class="documentation-section">
+            <div class="section-heading">
+                <div>
+                    <p class="section-eyebrow">UNDERSTANDING RESULTS</p>
+
+                    <h2>
+                        How to read a
+                        <br>
+                        <span>security finding.</span>
+                    </h2>
+                </div>
+            </div>
+
+            <div class="documentation-grid">
+                <article class="documentation-card">
+                    <h3>Finding Type</h3>
+                    <p>
+                        Identifies the kind of possible secret detected,
+                        such as an AWS key or hardcoded password.
+                    </p>
+                </article>
+
+                <article class="documentation-card">
+                    <h3>Line Number</h3>
+                    <p>
+                        Shows the source-code line where the possible
+                        secret was detected.
+                    </p>
+                </article>
+
+                <article class="documentation-card">
+                    <h3>Severity</h3>
+                    <p>
+                        Indicates the estimated risk level: Critical,
+                        High, Medium, or Low.
+                    </p>
+                </article>
+
+                <article class="documentation-card">
+                    <h3>Entropy</h3>
+                    <p>
+                        Shows the randomness of the detected value.
+                        Higher entropy may indicate a stronger secret.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <!-- Security Notice -->
+        <section class="notice-card">
+            <h2>Security notice</h2>
+
+            <p>
+                Use fake credentials when testing Sentinel. Never paste
+                real production secrets into an unsecured development
+                environment. If a real credential is exposed, revoke or
+                rotate it immediately.
+            </p>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="capabilities-cta">
+            <h2>Ready to scan your code?</h2>
+
+            <p>
+                Open the dashboard and check your source code for exposed secrets.
+            </p>
+
+            <a href="dashboard.html" class="btn btn-primary">
+                Open Dashboard →
+            </a>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>© 2026 Sentinel. Built for safer code.</p>
+    </footer>
 </body>
 </html>
