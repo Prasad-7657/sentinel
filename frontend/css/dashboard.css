@@ -156,3 +156,102 @@ code {
     overflow-wrap: anywhere;
     color: #a5b4fc;
 }
+ 
+.remediation {
+    margin-top: 16px;
+    padding: 14px;
+    border-left: 4px solid #f59e0b;
+    background: #fff7ed;
+    border-radius: 8px;
+}
+
+.remediation h4 {
+    margin-top: 0;
+    color: #9a3412;
+}
+
+.remediation p {
+    margin-bottom: 8px;
+}
+
+.remediation ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.remediation li {
+    margin-bottom: 5px;
+}
+.remediation {
+    margin-top: 16px;
+    padding: 16px;
+    border-left: 4px solid #f59e0b;
+    background: #fff7ed;
+    color: #431407;
+    border-radius: 8px;
+}
+
+.remediation h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #9a3412;
+    font-size: 16px;
+}
+
+.remediation p {
+    margin: 0 0 10px;
+    color: #431407;
+    line-height: 1.5;
+}
+
+.remediation ul {
+    margin: 0;
+    padding-left: 22px;
+    color: #431407;
+}
+
+.remediation li {
+    margin-bottom: 6px;
+    color: #431407;
+}
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 14px;
+    margin: 24px 0;
+}
+
+.summary-card {
+    padding: 18px;
+    border-radius: 10px;
+    background: #1f2937;
+    color: white;
+    border-top: 4px solid #64748b;
+}
+
+.summary-card span {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: #d1d5db;
+}
+
+.summary-card strong {
+    font-size: 30px;
+}
+
+.summary-card.critical {
+    border-top-color: #dc2626;
+}
+
+.summary-card.high {
+    border-top-color: #f97316;
+}
+
+.summary-card.medium {
+    border-top-color: #eab308;
+}
+
+.summary-card.low {
+    border-top-color: #22c55e;
+}

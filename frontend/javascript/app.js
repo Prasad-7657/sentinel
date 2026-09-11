@@ -3,6 +3,12 @@ const sourceCodeInput = document.getElementById("source-code");
 const resultsContainer = document.getElementById("results");
 const statusContainer = document.getElementById("scan-status");
 
+const totalCount = document.getElementById("total-count");
+const criticalCount = document.getElementById("critical-count");
+const highCount = document.getElementById("high-count");
+const mediumCount = document.getElementById("medium-count");
+const lowCount = document.getElementById("low-count");
+
 if (scanButton) {
     scanButton.addEventListener("click", scanContent);
 }
@@ -42,14 +48,23 @@ async function scanContent() {
         displayResults(result.findings || []);
     } catch (error) {
         statusContainer.textContent = error.message;
-        resultsContainer.textContent =
-            "Could not connect to the Sentinel backend.";
+
+        resultsContainer.innerHTML = `
+            <div class="finding-card error">
+                <h3>Scan failed</h3>
+                <p>Could not connect to the Sentinel backend.</p>
+            </div>
+        `;
+
+        updateSummary([]);
     } finally {
         scanButton.disabled = false;
     }
 }
 
 function displayResults(findings) {
+    updateSummary(findings);
+
     if (findings.length === 0) {
         resultsContainer.innerHTML = `
             <div class="finding-card safe">
@@ -63,33 +78,105 @@ function displayResults(findings) {
     resultsContainer.innerHTML = findings.map((finding) => {
         const severity = finding.severity || "unknown";
 
+        const remediationMessage =
+            finding.remediation?.message ||
+            "Review and remove this sensitive information.";
+
+        const remediationSteps =
+            finding.remediation?.steps || [];
+
         return `
-            <article class="finding-card ${severity}">
+            <article class="finding-card ${escapeHtml(severity)}">
                 <div class="finding-header">
                     <h3>${escapeHtml(finding.description)}</h3>
-                    <span class="severity-badge ${severity}">
+
+                    <span class="severity-badge ${escapeHtml(severity)}">
                         ${escapeHtml(severity.toUpperCase())}
                     </span>
                 </div>
 
-                <p><strong>Type:</strong>
+                <p>
+                    <strong>Type:</strong>
                     ${escapeHtml(finding.type)}
                 </p>
 
-                <p><strong>Line:</strong>
+                <p>
+                    <strong>Line:</strong>
                     ${escapeHtml(String(finding.line))}
                 </p>
 
-                <p><strong>Match:</strong>
-                    <code>${maskSecret(finding.match)}</code>
+                <p>
+                    <strong>Match:</strong>
+                    <code>${escapeHtml(maskSecret(finding.match))}</code>
                 </p>
 
-                <p><strong>Entropy:</strong>
+                <p>
+                    <strong>Entropy:</strong>
                     ${escapeHtml(String(finding.entropy))}
                 </p>
+
+                <div class="remediation">
+                    <h4>Recommended action</h4>
+
+                    <p>
+                        ${escapeHtml(remediationMessage)}
+                    </p>
+
+                    <ul>
+                        ${remediationSteps.map((step) => `
+                            <li>${escapeHtml(step)}</li>
+                        `).join("")}
+                    </ul>
+                </div>
             </article>
         `;
     }).join("");
+}
+
+function updateSummary(findings) {
+    const summary = {
+        total: findings.length,
+        critical: 0,
+        high: 0,
+        medium: 0,
+        low: 0
+    };
+
+    findings.forEach((finding) => {
+        const severity = String(
+            finding.severity || "unknown"
+        ).toLowerCase();
+
+        if (severity === "critical") {
+            summary.critical++;
+        } else if (severity === "high") {
+            summary.high++;
+        } else if (severity === "medium") {
+            summary.medium++;
+        } else if (severity === "low") {
+            summary.low++;
+        }
+    });
+
+    if (totalCount) {
+        totalCount.textContent = summary.total;
+    }
+
+    if (criticalCount) {
+        criticalCount.textContent = summary.critical;
+    }
+
+    if (highCount) {
+        highCount.textContent = summary.high;
+    }
+
+    if (mediumCount) {
+        mediumCount.textContent = summary.medium;
+    }
+
+    if (lowCount) {
+        lowCount.textContent = summary.low;
+    }
 }
 
 function maskSecret(value) {

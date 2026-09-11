@@ -32,7 +32,34 @@
 
         <section class="results-panel">
             <h2>Scan Results</h2>
-            <div id="results">
+            <div class="summary-cards">
+    <div class="summary-card total">
+        <span>Total Findings</span>
+        <strong id="total-count">0</strong>
+    </div>
+
+    <div class="summary-card critical">
+        <span>Critical</span>
+        <strong id="critical-count">0</strong>
+    </div>
+
+    <div class="summary-card high">
+        <span>High</span>
+        <strong id="high-count">0</strong>
+    </div>
+
+    <div class="summary-card medium">
+        <span>Medium</span>
+        <strong id="medium-count">0</strong>
+    </div>
+
+    <div class="summary-card low">
+        <span>Low</span>
+        <strong id="low-count">0</strong>
+    </div>
+</div>
+
+<div id="results"></div>
                 <p>No scan performed yet.</p>
             </div>
         </section>
