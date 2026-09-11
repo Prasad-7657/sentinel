@@ -18,7 +18,6 @@
 
         <nav class="nav-links">
             <a href="Mainpage.html">Home</a>
-            <a href="dashboard.html">Dashboard</a>
             <a href="capabilities.html">Capabilities</a>
             <a href="documentation.html" class="active">Documentation</a>
         </nav>
@@ -166,64 +165,6 @@
             </div>
         </section>
 
-        <!-- API Documentation -->
-        <section class="documentation-section">
-            <div class="section-heading">
-                <div>
-                    <p class="section-eyebrow">API REFERENCE</p>
-
-                    <h2>
-                        Available
-                        <br>
-                        <span>backend endpoints.</span>
-                    </h2>
-                </div>
-            </div>
-
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="method get">GET</span>
-                    <code>/health</code>
-                </div>
-
-                <p>
-                    Checks whether the Sentinel backend is running.
-                </p>
-            </div>
-
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="method post">POST</span>
-                    <code>/scan</code>
-                </div>
-
-                <p>
-                    Scans pasted text submitted as JSON.
-                </p>
-
-                <h4>Request body</h4>
-
-                <pre><code>{
-    "content": "password = \"demo-password\""
-}</code></pre>
-            </div>
-
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="method post">POST</span>
-                    <code>/scan-file</code>
-                </div>
-
-                <p>
-                    Scans a supported uploaded file using multipart form data.
-                </p>
-
-                <h4>Form field</h4>
-
-                <pre><code>file: example.py</code></pre>
-            </div>
-        </section>
-
         <!-- Result Explanation -->
         <section class="documentation-section">
             <div class="section-heading">
@@ -271,18 +212,6 @@
                     </p>
                 </article>
             </div>
-        </section>
-
-        <!-- Security Notice -->
-        <section class="notice-card">
-            <h2>Security notice</h2>
-
-            <p>
-                Use fake credentials when testing Sentinel. Never paste
-                real production secrets into an unsecured development
-                environment. If a real credential is exposed, revoke or
-                rotate it immediately.
-            </p>
         </section>
 
         <!-- Call to Action -->
