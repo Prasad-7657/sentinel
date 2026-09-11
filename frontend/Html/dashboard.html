@@ -3,64 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Sentinel Dashboard</title>
+
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
+
 <body>
-    <main class="dashboard">
+    <main class="dashboard-container">
         <header class="dashboard-header">
-            <p class="eyebrow">SENTINEL SECURITY PLATFORM</p>
-            <h1>Secret Exposure Scanner</h1>
-            <p>
-                Detect exposed credentials, API keys, passwords, and private keys.
-            </p>
+            <h1>Sentinel Security Dashboard</h1>
+            <p>Scan source code and files for exposed secrets.</p>
         </header>
 
-        <section class="scanner-panel">
-            <label for="source-code">Source code to scan</label>
+        <section class="scanner-section">
+            <h2>Scan Source Code</h2>
+
+            <label for="source-code">
+                Paste source code or configuration
+            </label>
 
             <textarea
                 id="source-code"
-                placeholder="Paste source code or configuration here..."
                 rows="12"
+                placeholder="Paste code containing a test secret here..."
             ></textarea>
 
-            <button id="scan-button">Scan for secrets</button>
+            <button
+                type="button"
+                id="scan-button"
+            >
+                Scan Code
+            </button>
+
+            <div class="file-upload-section">
+                <label for="file-input">
+                    Or upload a file to scan
+                </label>
+
+                <input
+                    type="file"
+                    id="file-input"
+                    accept=".py,.js,.ts,.java,.c,.cpp,.html,.css,.json,.yaml,.yml,.env,.txt,.xml,.ini,.conf"
+                >
+
+                <button
+                    type="button"
+                    id="file-scan-button"
+                >
+                    Scan Uploaded File
+                </button>
+            </div>
 
             <p id="scan-status" aria-live="polite"></p>
         </section>
 
-        <section class="results-panel">
+        <section class="summary-cards">
+            <div class="summary-card total">
+                <span>Total Findings</span>
+                <strong id="total-count">0</strong>
+            </div>
+
+            <div class="summary-card critical">
+                <span>Critical</span>
+                <strong id="critical-count">0</strong>
+            </div>
+
+            <div class="summary-card high">
+                <span>High</span>
+                <strong id="high-count">0</strong>
+            </div>
+
+            <div class="summary-card medium">
+                <span>Medium</span>
+                <strong id="medium-count">0</strong>
+            </div>
+
+            <div class="summary-card low">
+                <span>Low</span>
+                <strong id="low-count">0</strong>
+            </div>
+        </section>
+
+        <section class="results-section">
             <h2>Scan Results</h2>
-            <div class="summary-cards">
-    <div class="summary-card total">
-        <span>Total Findings</span>
-        <strong id="total-count">0</strong>
-    </div>
 
-    <div class="summary-card critical">
-        <span>Critical</span>
-        <strong id="critical-count">0</strong>
-    </div>
-
-    <div class="summary-card high">
-        <span>High</span>
-        <strong id="high-count">0</strong>
-    </div>
-
-    <div class="summary-card medium">
-        <span>Medium</span>
-        <strong id="medium-count">0</strong>
-    </div>
-
-    <div class="summary-card low">
-        <span>Low</span>
-        <strong id="low-count">0</strong>
-    </div>
-</div>
-
-<div id="results"></div>
-                <p>No scan performed yet.</p>
+            <div id="results">
+                <div class="finding-card safe">
+                    <h3>No scan performed yet</h3>
+                    <p>Paste code or upload a file to begin scanning.</p>
+                </div>
             </div>
         </section>
     </main>

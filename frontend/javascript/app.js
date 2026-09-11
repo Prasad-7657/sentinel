@@ -1,4 +1,7 @@
 const scanButton = document.getElementById("scan-button");
+const fileInput = document.getElementById("file-input");
+const fileScanButton = document.getElementById("file-scan-button");
+
 const sourceCodeInput = document.getElementById("source-code");
 const resultsContainer = document.getElementById("results");
 const statusContainer = document.getElementById("scan-status");
@@ -13,6 +16,10 @@ if (scanButton) {
     scanButton.addEventListener("click", scanContent);
 }
 
+if (fileScanButton) {
+    fileScanButton.addEventListener("click", scanUploadedFile);
+}
+
 async function scanContent() {
     const content = sourceCodeInput.value.trim();
 
@@ -22,19 +29,23 @@ async function scanContent() {
     }
 
     scanButton.disabled = true;
+    fileScanButton.disabled = true;
     statusContainer.textContent = "Scanning...";
     resultsContainer.innerHTML = "";
 
     try {
-        const response = await fetch("http://127.0.0.1:5000/scan", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                content: content
-            })
-        });
+        const response = await fetch(
+            "http://127.0.0.1:5000/scan",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    content: content
+                })
+            }
+        );
 
         const result = await response.json();
 
@@ -52,12 +63,65 @@ async function scanContent() {
         resultsContainer.innerHTML = `
             <div class="finding-card error">
                 <h3>Scan failed</h3>
-                <p>Could not connect to the Sentinel backend.</p>
+                <p>${escapeHtml(error.message)}</p>
             </div>
         `;
 
         updateSummary([]);
     } finally {
+        scanButton.disabled = false;
+        fileScanButton.disabled = false;
+    }
+}
+
+async function scanUploadedFile() {
+    const file = fileInput.files[0];
+
+    if (!file) {
+        statusContainer.textContent = "Please select a file first.";
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    fileScanButton.disabled = true;
+    scanButton.disabled = true;
+    statusContainer.textContent = `Scanning ${file.name}...`;
+    resultsContainer.innerHTML = "";
+
+    try {
+        const response = await fetch(
+            "http://127.0.0.1:5000/scan-file",
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || "File scan failed");
+        }
+
+        statusContainer.textContent =
+            `File scan completed. Findings: ${result.count}`;
+
+        displayResults(result.findings || []);
+    } catch (error) {
+        statusContainer.textContent = error.message;
+
+        resultsContainer.innerHTML = `
+            <div class="finding-card error">
+                <h3>File scan failed</h3>
+                <p>${escapeHtml(error.message)}</p>
+            </div>
+        `;
+
+        updateSummary([]);
+    } finally {
+        fileScanButton.disabled = false;
         scanButton.disabled = false;
     }
 }
